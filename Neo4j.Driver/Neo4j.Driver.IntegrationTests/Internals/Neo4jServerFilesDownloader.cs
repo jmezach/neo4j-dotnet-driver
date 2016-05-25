@@ -16,7 +16,10 @@
 // limitations under the License.
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Neo4j.Driver.IntegrationTests.Internals
 {
@@ -56,7 +59,7 @@ namespace Neo4j.Driver.IntegrationTests.Internals
         /// <param name="edition">The edition to download</param>
         /// <param name="platform">The platform to download</param>
         /// <returns></returns>
-        public static DirectoryInfo DownloadNeo4j(Neo4jServerEdition edition, Neo4jServerPlatform platform,
+        public static async Task<DirectoryInfo> DownloadNeo4j(Neo4jServerEdition edition, Neo4jServerPlatform platform,
             INeo4jServerFileExtractor fileExtractor)
         {
             EnsureDirectoriesExist();
@@ -79,14 +82,17 @@ namespace Neo4j.Driver.IntegrationTests.Internals
 
             var downloadedNew = false;
             long expectedSize;
-            using (var client = new WebClient())
+            using (var client = new HttpClient())
             {
-                client.OpenRead(packageUrl);
-                expectedSize = Convert.ToInt64(client.ResponseHeaders["Content-Length"]);
+                var result = await client.GetAsync(packageUrl);
+                expectedSize = result.Content.Headers.ContentLength.GetValueOrDefault();
                 if (!downloadFileInfo.Exists || downloadFileInfo.Length != expectedSize)
                 {
-                    client.DownloadProgressChanged += (s, e) => { Console.Write("."); };
-                    client.DownloadFile(packageUrl, downloadFileInfo.FullName);
+                    using (var fileStream = new FileStream(downloadFileInfo.FullName, FileMode.CreateNew))
+                    {
+                        await result.Content.CopyToAsync(fileStream);
+                    }
+
                     downloadedNew = true;
                 }
             }

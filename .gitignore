@@ -194,3 +194,6 @@ Neo4j.Driver/.vs/config/applicationhost.config
 
 # Lock file
 project.lock.json
+
+# Target folder
+target/

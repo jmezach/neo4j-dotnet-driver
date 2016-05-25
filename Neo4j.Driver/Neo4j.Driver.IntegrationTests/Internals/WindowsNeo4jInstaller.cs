@@ -16,9 +16,9 @@
 // limitations under the License.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Threading.Tasks;
 using Neo4j.Driver.V1;
 
@@ -33,7 +33,7 @@ namespace Neo4j.Driver.IntegrationTests.Internals
             Neo4jHome = Neo4jServerFilesDownloadHelper.DownloadNeo4j(
                 Neo4jServerEdition.Community,
                 Neo4jServerPlatform.Windows,
-                new ZipNeo4jServerFileExtractor());
+                new ZipNeo4jServerFileExtractor()).Result;
         }
 
         public void UpdateSettings(IDictionary<string, string> keyValuePair)
@@ -43,17 +43,17 @@ namespace Neo4j.Driver.IntegrationTests.Internals
 
         public void InstallServer()
         {
-            RunPowershellCommand("install-service");
+            RunCommand("install-service");
         }
 
         public void UninstallServer()
         {
-            RunPowershellCommand("uninstall-service");
+            RunCommand("uninstall-service");
         }
 
         public void StartServer()
         {
-            RunPowershellCommand("start");
+            RunCommand("start");
 #if BUILDSERVER
             Task.Delay(100000).Wait();
 #else
@@ -63,31 +63,23 @@ namespace Neo4j.Driver.IntegrationTests.Internals
 
         public void StopServer()
         {
-            RunPowershellCommand("stop");
+            RunCommand("stop");
 #if BUILDSERVER
             Task.Delay(100000).Wait();
 #endif
         }
 
-        private void RunPowershellCommand(string command)
+        private void RunCommand(string command)
         {
-            using (var powershell = PowerShell.Create())
-            {
-                var batfile = Path.Combine(Neo4jHome.FullName, "bin/Neo4j.bat");
-                powershell.AddCommand(batfile);
-                powershell.AddArgument(command);
-                powershell.Invoke();
-                if (powershell.HadErrors)
-                {
-                    throw new Neo4jException("Integration", CollectAsString(powershell.Streams.Error));
-                }
-            }
-        }
+            var batfile = Path.Combine(Neo4jHome.FullName, "bin/Neo4j.bat");
+            var processStartInfo = new ProcessStartInfo(batfile, command);
+            var process = Process.Start(processStartInfo);
+            process.WaitForExit();
 
-        private string CollectAsString(PSDataCollection<ErrorRecord> errors)
-        {
-            var output = errors.Select(error => error.ToString()).ToList();
-            return string.Join(Environment.NewLine, output);
+            if (process.ExitCode != 0)
+            {
+                throw new Neo4jException("Integration", "Error running command");
+            }
         }
     }
 }

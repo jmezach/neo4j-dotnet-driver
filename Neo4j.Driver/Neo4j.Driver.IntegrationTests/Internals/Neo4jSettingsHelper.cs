@@ -35,8 +35,8 @@ namespace Neo4j.Driver.IntegrationTests.Internals
             var tempFileName = Path.Combine(location, "conf/neo4j.conf.tmp");
             File.Move(configFileName, tempFileName);
 
-            using (var reader = new StreamReader(tempFileName))
-            using (var writer = new StreamWriter(configFileName))
+            using (var reader = new StreamReader(new FileStream(tempFileName, FileMode.Open)))
+            using (var writer = new StreamWriter(new FileStream(configFileName, FileMode.Open)))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)

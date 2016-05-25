@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Neo4j.Driver.IntegrationTests", "Neo4j.Driver.IntegrationTests\Neo4j.Driver.IntegrationTests.xproj", "{BF0FF9B6-E6FF-4636-AB4C-3FD2F3F6EC1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{0EE94621-8284-4DC4-8A29-8D497739E241}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EE94621-8284-4DC4-8A29-8D497739E241}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EE94621-8284-4DC4-8A29-8D497739E241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF0FF9B6-E6FF-4636-AB4C-3FD2F3F6EC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0FF9B6-E6FF-4636-AB4C-3FD2F3F6EC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0FF9B6-E6FF-4636-AB4C-3FD2F3F6EC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0FF9B6-E6FF-4636-AB4C-3FD2F3F6EC1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
