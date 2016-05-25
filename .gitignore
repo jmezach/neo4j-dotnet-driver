@@ -191,3 +191,6 @@ _NCrunch_*
 *.vs/
 Neo4j.Driver/.vs/config/applicationhost.config
 *.GhostDoc*
+
+# Lock file
+project.lock.json
