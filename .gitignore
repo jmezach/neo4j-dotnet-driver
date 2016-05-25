@@ -188,6 +188,6 @@ $RECYCLE.BIN/
 _NCrunch_*
 .*crunch*.local.xml
 
-*.vs\
+*.vs/
 Neo4j.Driver/.vs/config/applicationhost.config
 *.GhostDoc*
